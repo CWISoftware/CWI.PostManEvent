@@ -1,21 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CWI.PostManEvent.Common.Hubs;
-using CWI.PostManEvent.Hubs.LocalMemory;
-using CWI.PostManEvent.Common.Events;
+using CWI.PostManEvent.Hubs.AsyncSync;
 using CWI.PostManEvent.Test.Implementations;
+using CWI.PostManEvent.Common.Events;
+using System.Threading;
 
 namespace CWI.PostManEvent.Test
 {
     [TestClass]
-    public class ProcessLocalMemoryHubTests
+    public class ProcessAsyncSyncHubTests
     {
         BaseHubEvent hubEvent;
 
         [TestInitialize]
         public void Init()
         {
-            hubEvent = new LocalMemoryHub();
+            hubEvent = new AsyncSyncHub();
 
             PostManManager.Instance.SetHub(hubEvent);
         }
@@ -125,5 +126,45 @@ namespace CWI.PostManEvent.Test
 
         }
 
+        [TestMethod]
+        public void ValidarSubAsync()
+        {
+            var sub = new AsyncSubscribe();
+            hubEvent.Subscribe<EventAEx>(sub);
+
+            var eventEx = new EventAEx();
+            PostManManager.Raise(eventEx);
+
+            var events = PostManManager.Events<EventAEx>().ToList();
+            Assert.AreEqual(1, events.Count);
+            Assert.AreEqual(1, events.Single().Results.Count);
+
+            var result = events.Single().Results.Single();
+            Assert.IsTrue(result.State == ResultEventState.Running);
+
+            sub.Running = false;
+
+            Thread.Sleep(2000);
+            Assert.IsTrue(result.State == ResultEventState.Completed);
+        }
+
+        [TestMethod]
+        public void ValidarSubSync()
+        {
+            var sub = new SyncSubscribe();
+            hubEvent.Subscribe<EventAEx>(sub);
+
+            var eventEx = new EventAEx();
+            PostManManager.Raise(eventEx);
+
+            var events = PostManManager.Events<EventAEx>().ToList();
+            Assert.AreEqual(1, events.Count);
+            Assert.AreEqual(1, events.Single().Results.Count);
+
+            var result = events.Single().Results.Single();
+            Assert.IsTrue(result.State == ResultEventState.Completed);
+
+
+        }
     }
 }

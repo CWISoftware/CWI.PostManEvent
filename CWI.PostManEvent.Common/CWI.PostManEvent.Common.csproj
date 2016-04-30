@@ -45,7 +45,7 @@
     <Compile Include="Events\ResultEvent.cs" />
     <Compile Include="Events\ResultEventState.cs" />
     <Compile Include="Hubs\HubEventType.cs" />
-    <Compile Include="Hubs\IHubEvent.cs" />
+    <Compile Include="Hubs\BaseHubEvent.cs" />
     <Compile Include="Hubs\IPostManSubscribe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

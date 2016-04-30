@@ -51,13 +51,13 @@ namespace CWI.PostManEvent
         }
 
 
-        private ConcurrentBag<IHubEvent> hubEvents;
+        private ConcurrentBag<BaseHubEvent> hubEvents;
 
         private ConcurrentBag<BasePostManEvent> postManEvent = new ConcurrentBag<BasePostManEvent>();
 
         private PostManManager()
         {
-            this.hubEvents = new ConcurrentBag<IHubEvent>();
+            this.hubEvents = new ConcurrentBag<BaseHubEvent>();
         }
 
         private PostManManager(PostManManager instance)
@@ -81,7 +81,7 @@ namespace CWI.PostManEvent
             return Instance.postManEvent.ToList();
         }
 
-        public void SetHub(IHubEvent hubEvent)
+        public void SetHub(BaseHubEvent hubEvent)
         {
             hubEvents.Add(hubEvent);
         }

@@ -2,16 +2,17 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace CWI.PostManEvent.Common.Events
 {
     public abstract class BasePostManEvent
     {
-        public List<ResultEvent> Results { get; private set; }
+        public ConcurrentBag<ResultEvent> Results { get; private set; }
 
         public BasePostManEvent()
         {
-            Results = new List<ResultEvent>();
+            Results = new ConcurrentBag<ResultEvent>();
         }
 
         public ResultEvent ProcessingFor(IPostManSubscribe subscribe)
@@ -34,7 +35,7 @@ namespace CWI.PostManEvent.Common.Events
         public void ProcessedFor(IPostManSubscribe subscribe)
         {
             if (!AlreadyProcessed(subscribe.GetType()))
-                throw new InvalidOperationException($"Não foi possivel sinalizar que o subscribr {subscribe.GetType()} foi processado");
+                throw new InvalidOperationException($"Não foi possivel sinalizar que o subscribe {subscribe.GetType()} foi processado");
 
             Results.Single(r => r.Subscribe.GetType() == subscribe.GetType()).State = ResultEventState.Completed;
         }

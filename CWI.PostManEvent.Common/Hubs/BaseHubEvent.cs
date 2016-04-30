@@ -11,8 +11,14 @@ namespace CWI.PostManEvent.Common.Hubs
     /// </summary>
     public abstract class BaseHubEvent
     {
-        protected readonly ConcurrentDictionary<Type, List<IPostManSubscribe>> subscribes = new ConcurrentDictionary<Type, List<IPostManSubscribe>>();
+        protected readonly ConcurrentDictionary<Type, List<Type>> subscribes = new ConcurrentDictionary<Type, List<Type>>();
         protected readonly ConcurrentBag<BasePostManEvent> events = new ConcurrentBag<BasePostManEvent>();
+        protected IPostManResolver resolver = new PostManResolver();
+
+        public virtual void SetResolver(IPostManResolver resolver)
+        {
+            this.resolver = resolver;
+        }
 
         public virtual void Publish(BasePostManEvent postManEvent)
         {
@@ -26,7 +32,9 @@ namespace CWI.PostManEvent.Common.Hubs
 
         protected List<IPostManSubscribe> ListSubscribesFor(BasePostManEvent postManEvent)
         {
-            return subscribes[postManEvent.GetType()];
+            var subscribesList = subscribes[postManEvent.GetType()];
+
+            return subscribesList.Select(s => (IPostManSubscribe)resolver.GetSubscribe(s)).ToList();
         }
 
         protected abstract void ProcessPublish(BasePostManEvent postManEvent);
@@ -42,14 +50,15 @@ namespace CWI.PostManEvent.Common.Hubs
             return events.Any(e => typeof(T) == e.GetType());
         }
 
-        public virtual void Subscribe<E>(IPostManSubscribe subscribe) 
-            where E : Events.BasePostManEvent
+        public virtual void Subscribe<E, S>() 
+            where E : BasePostManEvent
+            where S : IPostManSubscribe
         {
-            List<IPostManSubscribe> listSub;
+            List<Type> listSub;
 
             if (!HasSubscribe(typeof(E)))
             {
-                listSub = new List<IPostManSubscribe>();
+                listSub = new List<Type>();
                 subscribes[typeof(E)] = listSub;
             }
             else
@@ -57,22 +66,23 @@ namespace CWI.PostManEvent.Common.Hubs
                 listSub = subscribes[typeof(E)];
             }
 
-            listSub.Add(subscribe);
+            listSub.Add(typeof(S));
         }
 
-        public virtual void Unsubscribe<T>(IPostManSubscribe subscribe)
-           where T : Events.BasePostManEvent
+        public virtual void Unsubscribe<T, S>()
+           where T : BasePostManEvent
+           where S : IPostManSubscribe
         {
-            List<IPostManSubscribe> listSub = subscribes[typeof(T)];
+            List<Type> listSub = subscribes[typeof(T)];
 
             if (listSub != null)
             {
-                listSub.Remove(subscribe);
+                listSub.Remove(typeof(S));
             }
         }
 
         public virtual IEnumerable<T> Published<T>()
-            where T : Events.BasePostManEvent
+            where T : BasePostManEvent
         {
             return events.Where(e => typeof(T) == e.GetType()).Select(e => (T)e).ToList();
         }

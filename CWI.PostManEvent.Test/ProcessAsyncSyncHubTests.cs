@@ -5,6 +5,7 @@ using CWI.PostManEvent.Hubs.AsyncSync;
 using CWI.PostManEvent.Test.Implementations;
 using CWI.PostManEvent.Common.Events;
 using System.Threading;
+using System;
 
 namespace CWI.PostManEvent.Test
 {
@@ -64,8 +65,7 @@ namespace CWI.PostManEvent.Test
         [TestMethod]
         public void ExecutarComSubscribeSimples()
         {
-            var sub = new SubscribeA();
-            hubEvent.Subscribe<EventAEx>(sub);
+            hubEvent.Subscribe<EventAEx, SubscribeA>();
 
             var eventEx = new EventAEx();
             PostManManager.Raise(eventEx);
@@ -77,7 +77,7 @@ namespace CWI.PostManEvent.Test
 
             var result = events.Single().Results.Single();
             Assert.IsTrue(result.State == ResultEventState.Completed);
-            Assert.AreEqual(sub, result.Subscribe);
+            Assert.IsTrue(result.Subscribe is SubscribeA);
             Assert.AreEqual(eventEx, result.Event);
             Assert.AreEqual(0, result.Exceptions.Count);
         }
@@ -85,11 +85,9 @@ namespace CWI.PostManEvent.Test
         [TestMethod]
         public void PublicacaoParaMesmoEvento()
         {
-            var suba = new SubscribeA();
-            hubEvent.Subscribe<EventAEx>(suba);
+            hubEvent.Subscribe<EventAEx, SubscribeA>();
 
-            var subb = new SubscribeB();
-            hubEvent.Subscribe<EventAEx>(subb);
+            hubEvent.Subscribe<EventAEx, SubscribeB>();
 
             var eventEx = new EventAEx();
             PostManManager.Raise(eventEx);
@@ -103,14 +101,12 @@ namespace CWI.PostManEvent.Test
         [TestMethod]
         public void RemoverSubscricao()
         {
-            var suba = new SubscribeA();
-            hubEvent.Subscribe<EventAEx>(suba);
+            hubEvent.Subscribe<EventAEx, SubscribeA>();
 
-            var subb = new SubscribeB();
-            hubEvent.Subscribe<EventAEx>(subb);
-            hubEvent.Subscribe<EventBEx>(subb);
+            hubEvent.Subscribe<EventAEx, SubscribeB>();
+            hubEvent.Subscribe<EventBEx, SubscribeB>();
 
-            hubEvent.Unsubscribe<EventAEx>(subb);
+            hubEvent.Unsubscribe<EventAEx, SubscribeB>();
 
             var eventAEx = new EventAEx();
             PostManManager.Raise(eventAEx);
@@ -129,8 +125,12 @@ namespace CWI.PostManEvent.Test
         [TestMethod]
         public void ValidarSubAsync()
         {
-            var sub = new AsyncSubscribe();
-            hubEvent.Subscribe<EventAEx>(sub);
+
+            TestResolver resolver = new TestResolver();
+            resolver.subscribe = new AsyncSubscribe();
+
+            hubEvent.Subscribe<EventAEx, AsyncSubscribe>();
+            hubEvent.SetResolver(resolver);
 
             var eventEx = new EventAEx();
             PostManManager.Raise(eventEx);
@@ -142,7 +142,7 @@ namespace CWI.PostManEvent.Test
             var result = events.Single().Results.Single();
             Assert.IsTrue(result.State == ResultEventState.Running);
 
-            sub.Running = false;
+            ((AsyncSubscribe)resolver.subscribe).Running = false;
 
             Thread.Sleep(2000);
             Assert.IsTrue(result.State == ResultEventState.Completed);
@@ -151,8 +151,7 @@ namespace CWI.PostManEvent.Test
         [TestMethod]
         public void ValidarSubSync()
         {
-            var sub = new SyncSubscribe();
-            hubEvent.Subscribe<EventAEx>(sub);
+            hubEvent.Subscribe<EventAEx, SyncSubscribe>();
 
             var eventEx = new EventAEx();
             PostManManager.Raise(eventEx);
@@ -163,8 +162,20 @@ namespace CWI.PostManEvent.Test
 
             var result = events.Single().Results.Single();
             Assert.IsTrue(result.State == ResultEventState.Completed);
+        }
+    }
 
+    class TestResolver : IPostManResolver
+    {
+        public IPostManSubscribe subscribe;
+        public object GetSubscribe(Type type)
+        {
+            return subscribe;
+        }
 
+        public T GetSubscribe<T>()
+        {
+            return (T)subscribe;
         }
     }
 }

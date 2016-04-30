@@ -47,7 +47,9 @@
     <Compile Include="Events\ResultEventState.cs" />
     <Compile Include="Hubs\HubEventType.cs" />
     <Compile Include="Hubs\BaseHubEvent.cs" />
+    <Compile Include="Hubs\IPostManResolver.cs" />
     <Compile Include="Hubs\IPostManSubscribe.cs" />
+    <Compile Include="Hubs\PostManResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

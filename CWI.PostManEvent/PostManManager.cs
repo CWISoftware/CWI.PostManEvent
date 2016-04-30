@@ -51,9 +51,9 @@ namespace CWI.PostManEvent
         }
 
 
-        private ConcurrentBag<BaseHubEvent> hubEvents;
+        private readonly ConcurrentBag<BaseHubEvent> hubEvents;
 
-        private ConcurrentBag<BasePostManEvent> postManEvent = new ConcurrentBag<BasePostManEvent>();
+        private readonly ConcurrentBag<BasePostManEvent> postManEvent = new ConcurrentBag<BasePostManEvent>();
 
         private PostManManager()
         {

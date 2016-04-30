@@ -1,7 +1,6 @@
 ﻿using CWI.PostManEvent.Common.Hubs;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 
 namespace CWI.PostManEvent.Common.Events

@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CWI.PostManEvent.Test", "CW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CWI.PostManEvent.Common", "CWI.PostManEvent.Common\CWI.PostManEvent.Common.csproj", "{FD9525BC-8C11-4A50-8547-3840CFE6AAE4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A8D774F0-2DBD-4D4B-B3EB-03CEEA6E5773}"
+	ProjectSection(SolutionItems) = preProject
+		build.yml = build.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

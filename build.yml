@@ -1,0 +1,11 @@
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+
+after_build:
+- cmd: nuget package CWI.PostManEvent.Common\CWI.PostManEvent.Common.nuspec -Version {version}
+- cmd: nuget package CWI.PostManEvent\CWI.PostManEvent.nuspec -Version {version}

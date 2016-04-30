@@ -3,7 +3,7 @@ using System.Linq;
 using CWI.PostManEvent.Common.Hubs;
 using CWI.PostManEvent.Hubs.LocalMemory;
 using CWI.PostManEvent.Common.Events;
-using System;
+using CWI.PostManEvent.Test.Implementations;
 
 namespace CWI.PostManEvent.Test
 {
@@ -125,36 +125,5 @@ namespace CWI.PostManEvent.Test
 
         }
 
-    }
-
-    public class EventAEx : BasePostManEvent
-    {
-
-    }
-
-    public class EventBEx : BasePostManEvent
-    {
-
-    }
-
-    public class EventCEx : BasePostManEvent
-    {
-
-    }
-
-    public class SubscribeA : IPostManSubscribe
-    {
-        public void Published<T>(T postManEvent) where T : BasePostManEvent
-        {
-            
-        }
-    }
-
-    public class SubscribeB : IPostManSubscribe
-    {
-        public void Published<T>(T postManEvent) where T : BasePostManEvent
-        {
-
-        }
     }
 }

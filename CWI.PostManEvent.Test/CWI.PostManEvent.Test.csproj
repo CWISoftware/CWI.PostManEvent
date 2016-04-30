@@ -56,6 +56,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Implementations\EventAEx.cs" />
+    <Compile Include="Implementations\EventCEx.cs" />
+    <Compile Include="Implementations\EventBEx.cs" />
+    <Compile Include="Implementations\SubscribeB.cs" />
+    <Compile Include="Implementations\SubscribeA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProcessLocalMemoryHubTests.cs" />
   </ItemGroup>

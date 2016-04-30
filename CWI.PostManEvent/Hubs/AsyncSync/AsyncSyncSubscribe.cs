@@ -1,5 +1,4 @@
-﻿using System;
-using CWI.PostManEvent.Common.Events;
+﻿using CWI.PostManEvent.Common.Events;
 using CWI.PostManEvent.Common.Hubs;
 
 namespace CWI.PostManEvent.Hubs.AsyncSync

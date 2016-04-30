@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Linq;
 using CWI.PostManEvent.Common.Events;
-using System;
 
 namespace CWI.PostManEvent
 {

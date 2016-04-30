@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CWI.PostManEvent.Common.nuspec" />
     <Compile Include="Events\BasePostManEvent.cs" />
     <Compile Include="Events\ResultEvent.cs" />
     <Compile Include="Events\ResultEventState.cs" />

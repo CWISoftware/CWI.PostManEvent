@@ -7,6 +7,7 @@
     <authors>CWI Software</authors>
     <owners>CWI Software (www.cwi.com.br)</owners>
     <copyright>Copyright CWI Software 2016</copyright>
+    <description>Framework para suporte a controle de eventos</description>
   </metadata>
   <files>
     <file src="bin\**\CWI.PostManEvent.Common.dll" target="lib" />

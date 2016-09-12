@@ -18,17 +18,24 @@ namespace CWI.PostManEvent
         {
             get
             {
+                PostManManager request = null;
+
                 if (HttpContext.Current != null)
                 {
-                    return HttpContext.Current.Items[INSTANCEKEY] as PostManManager;
+                    request = HttpContext.Current.Items[INSTANCEKEY] as PostManManager;
                 }
 
-                if (instance == null)
+                if (instance == null && request == null)
                 {
                     instance = new PostManManager();
+                    request = instance;
+                }
+                else
+                {
+                    request = instance;
                 }
 
-                return instance;
+                return request;
 
             }
         }
@@ -90,16 +97,10 @@ namespace CWI.PostManEvent
         {
             this.postManEvent.Add(postManEvent);
 
-            List<Task> taks = new List<Task>();
-            Parallel.ForEach(hubEvents, h => 
+            foreach(var h in hubEvents)
             {
-                taks.Add(Task.Run(() => { h.Publish(postManEvent); }));
-            });
-
-            taks.ForEach(t =>
-            {
-                t.Wait();
-            });
+                h.Publish(postManEvent);
+            }
         }
     }
 }
